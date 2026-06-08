@@ -1,26 +1,161 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #030712;
+  --foreground: #f3f4f6;
+  --card-bg: rgba(10, 15, 30, 0.5);
+  --card-border: rgba(255, 255, 255, 0.08);
 }
 
-@theme inline {
+@theme {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
+  
+  --animate-scanline: scanline 10s linear infinite;
+  --animate-pulse-glow: pulse-glow 2.5s ease-in-out infinite;
+  --animate-pulse-green: pulse-green 2.5s ease-in-out infinite;
+  --animate-float-slow: float-slow 12s ease-in-out infinite;
+  --animate-float-medium: float-medium 8s ease-in-out infinite;
+  --animate-fade-in: fade-in 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  --animate-slide-up: slide-up 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  @keyframes scanline {
+    0% {
+      transform: translateY(-100%);
+    }
+    100% {
+      transform: translateY(100vh);
+    }
+  }
+  @keyframes pulse-glow {
+    0%, 100% {
+      opacity: 0.5;
+      transform: scale(1);
+      filter: drop-shadow(0 0 4px rgba(239, 68, 68, 0.4)) drop-shadow(0 0 1px rgba(239, 68, 68, 0.2));
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1.02);
+      filter: drop-shadow(0 0 12px rgba(239, 68, 68, 0.75)) drop-shadow(0 0 3px rgba(239, 68, 68, 0.4));
+    }
+  }
+  @keyframes pulse-green {
+    0%, 100% {
+      opacity: 0.5;
+      transform: scale(1);
+      filter: drop-shadow(0 0 4px rgba(16, 185, 129, 0.4));
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1.02);
+      filter: drop-shadow(0 0 12px rgba(16, 185, 129, 0.7));
+    }
+  }
+  @keyframes float-slow {
+    0%, 100% {
+      transform: translateY(0) translateX(0);
+    }
+    50% {
+      transform: translateY(-15px) translateX(8px);
+    }
+  }
+  @keyframes float-medium {
+    0%, 100% {
+      transform: translateY(0) translateX(0);
+    }
+    50% {
+      transform: translateY(12px) translateX(-8px);
+    }
+  }
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  @keyframes slide-up {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 }
 
 body {
-  background: var(--background);
+  background-color: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* Glassmorphism custom styling */
+.glass-panel {
+  background: rgba(10, 11, 20, 0.65);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8),
+              inset 0 1px 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.glass-panel:hover {
+  border-color: rgba(255, 255, 255, 0.12);
+  box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.9),
+              0 0 20px 0 rgba(255, 255, 255, 0.02),
+              inset 0 1px 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+/* Scanline visual FX overlays */
+.scanlines {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    rgba(18, 16, 16, 0) 50%,
+    rgba(0, 0, 0, 0.4) 50%
+  );
+  background-size: 100% 4px;
+  z-index: 40;
+  opacity: 0.25;
+}
+
+.scanline-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 6px;
+  background: linear-gradient(
+    to bottom,
+    rgba(239, 68, 68, 0) 0%,
+    rgba(239, 68, 68, 0.06) 50%,
+    rgba(239, 68, 68, 0) 100%
+  );
+  pointer-events: none;
+  z-index: 41;
+  animation: scanline 12s linear infinite;
+}
+
+/* Custom Scrollbar for Hacker terminal vibe */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(3, 7, 18, 0.9);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
 }
