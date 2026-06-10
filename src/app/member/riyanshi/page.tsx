@@ -69,12 +69,7 @@ export default function RiyanshiStory() {
   }, []);
 
   const handleBackToHQ = () => {
-    const currentUser = localStorage.getItem("bkl_current_user");
-    if (currentUser) {
-      router.push(`/member/${currentUser}`);
-    } else {
-      router.push("/login");
-    }
+    router.push("/");
   };
 
   return (

@@ -54,12 +54,7 @@ export default function SaloniStory() {
   }, []);
 
   const handleBackToHQ = () => {
-    const currentUser = localStorage.getItem("bkl_current_user");
-    if (currentUser) {
-      router.push(`/member/${currentUser}`);
-    } else {
-      router.push("/login");
-    }
+    router.push("/");
   };
 
   // Carousel item emojis mapping

@@ -26,12 +26,7 @@ export default function RajuStory() {
   const [musicClicked, setMusicClicked] = useState(false);
 
   const handleBackToHQ = () => {
-    const currentUser = localStorage.getItem("bkl_current_user");
-    if (currentUser) {
-      router.push(`/member/${currentUser}`);
-    } else {
-      router.push("/login");
-    }
+    router.push("/");
   };
 
   // Generate arrays for floating hearts

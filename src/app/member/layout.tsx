@@ -19,12 +19,32 @@ export default function MemberLayout({ children }: { children: React.ReactNode }
     }
 
     // Validate against database
-    const normalizedUser = currentUser.trim().toLowerCase();
-    const isValidMember = MEMBERS_DB.some((m) => m.username.toLowerCase() === normalizedUser);
+    const normalizedCurrent = currentUser.trim().toLowerCase();
+    const currentMember = MEMBERS_DB.find((m) => m.username.toLowerCase() === normalizedCurrent);
 
-    if (!isValidMember) {
+    if (!currentMember) {
       localStorage.removeItem("bkl_current_user");
       router.push("/login");
+      return;
+    }
+
+    // Extract requested member name from path
+    // Pathname looks like: "/member/raju"
+    const parts = pathname.split("/");
+    const requestedUser = parts[2]; // Index 2 contains the username cname
+
+    if (!requestedUser) {
+      // If directly accessing "/member" or "/member/", redirect to their own route
+      router.push(currentMember.route);
+      return;
+    }
+
+    const normalizedRequested = requestedUser.trim().toLowerCase();
+
+    // Check if current user is authorized to access the requested route
+    if (normalizedCurrent !== normalizedRequested) {
+      // If mismatch, automatically redirect to the logged-in user's correct page
+      router.push(currentMember.route);
       return;
     }
 
