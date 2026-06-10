@@ -1,10 +1,22 @@
+"use client";
+
 import Link from "next/link";
+import React from "react";
 import ParticlesBackground from "@/components/ParticlesBackground";
 import GlassCard from "@/components/GlassCard";
 
+const MEMORY_ITEMS = [
+  { title: "Group Trip", description: "Vibe check in the mountains.", date: "NOV 2025" },
+  { title: "First Semester", description: "Where the chaos started.", date: "DEC 2024" },
+  { title: "Second Semester", description: "More exams, more bakchodi.", date: "MAY 2025" },
+  { title: "Random Bakchodi", description: "Late night talks & chai.", date: "EVERYDAY" },
+  { title: "Food Archives", description: "Momos, chai, and endless rolls.", date: "ONGOING" },
+  { title: "Future Memories", description: "Awaiting initialization.", date: "COMING SOON" }
+];
+
 export default function Home() {
   return (
-    <main className="relative min-h-screen flex flex-col justify-center items-center p-4 overflow-hidden select-none">
+    <main className="relative min-h-screen flex flex-col items-center py-12 px-4 overflow-y-auto select-none bg-[#030712]">
       {/* Dynamic interactive particles */}
       <ParticlesBackground />
 
@@ -14,8 +26,23 @@ export default function Home() {
       {/* Cinematic Ambient Glow Radial Gradient */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-red-950/10 rounded-full blur-[120px] pointer-events-none -z-25" />
 
+      {/* CSS Animation for Infinite Scroll */}
+      <style jsx>{`
+        @keyframes infiniteScroll {
+          0% {
+            transform: translateX(0);
+          }
+          100% {
+            transform: translateX(-50%);
+          }
+        }
+        .animate-infinite-scroll {
+          animation: infiniteScroll 30s linear infinite;
+        }
+      `}</style>
+
       {/* Main Container */}
-      <div className="w-full max-w-xl flex flex-col items-center justify-center text-center space-y-8 z-10 my-auto">
+      <div className="w-full max-w-xl flex flex-col items-center justify-center text-center space-y-8 z-10 mt-8 mb-4">
         
         {/* 1. CONFIDENTIAL BADGE */}
         <div className="animate-fade-in opacity-0" style={{ animationDelay: "150ms" }}>
@@ -97,8 +124,98 @@ export default function Home() {
 
       </div>
 
+      {/* 5.5 MEMORY LANE SECTION */}
+      <div className="w-full max-w-5xl mt-16 mb-12 space-y-8 animate-slide-up opacity-0 relative z-10 text-center" style={{ animationDelay: "900ms" }}>
+        
+        {/* Section Header */}
+        <div className="space-y-2 px-4">
+          <h2 className="text-3xl md:text-4xl font-black tracking-widest text-neutral-100 font-mono uppercase drop-shadow-[0_2px_8px_rgba(255,255,255,0.05)]">
+            MEMORY LANE 📸
+          </h2>
+          <div className="text-xs font-mono text-neutral-500 uppercase tracking-widest leading-relaxed">
+            <p>Some memories.</p>
+            <p>Many regrets.</p>
+          </div>
+        </div>
+
+        {/* Carousel viewport */}
+        <div className="w-full overflow-hidden relative py-4">
+          
+          {/* Subtle gradient fading mask on left and right for soft look */}
+          <div className="absolute top-0 bottom-0 left-0 w-8 md:w-20 bg-gradient-to-r from-[#030712] to-transparent z-20 pointer-events-none" />
+          <div className="absolute top-0 bottom-0 right-0 w-8 md:w-20 bg-gradient-to-l from-[#030712] to-transparent z-20 pointer-events-none" />
+
+          {/* Scrolling track */}
+          <div className="flex gap-6 w-max animate-infinite-scroll hover:[animation-play-state:paused] transition-all">
+            {/* First Set of Memory Cards */}
+            {MEMORY_ITEMS.map((item, idx) => (
+              <div
+                key={`m1-${idx}`}
+                className="w-72 sm:w-80 md:w-[350px] h-48 sm:h-56 md:h-60 rounded-2xl border border-white/5 hover:border-white/10 bg-neutral-900/30 backdrop-blur-md p-5 flex flex-col justify-between relative overflow-hidden group select-none transition-colors cursor-default shrink-0 shadow-lg"
+              >
+                {/* Photo overlay vignette */}
+                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/40 to-black/80 z-10" />
+                <div className="absolute inset-0 bg-red-950/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+                
+                {/* Top Label */}
+                <div className="flex justify-between items-start z-20 font-mono text-[9px] text-neutral-500 uppercase tracking-wider">
+                  <span>MEM_RECORD_0{idx + 1}</span>
+                  <span>{item.date}</span>
+                </div>
+
+                {/* Center placeholder image frame */}
+                <div className="flex-grow flex items-center justify-center z-20">
+                  <span className="text-4xl text-neutral-700 group-hover:scale-110 transition-transform duration-500 select-none">🖼️</span>
+                </div>
+
+                {/* Bottom Metadata */}
+                <div className="z-20 text-left space-y-1">
+                  <h3 className="font-mono text-sm font-bold text-neutral-200 uppercase tracking-wide group-hover:text-red-400 transition-colors duration-300">
+                    {item.title}
+                  </h3>
+                  <p className="font-mono text-[10px] text-neutral-500">
+                    {item.description}
+                  </p>
+                </div>
+              </div>
+            ))}
+            
+            {/* Duplicate Set of Memory Cards for Seamless Looping */}
+            {MEMORY_ITEMS.map((item, idx) => (
+              <div
+                key={`m2-${idx}`}
+                className="w-72 sm:w-80 md:w-[350px] h-48 sm:h-56 md:h-60 rounded-2xl border border-white/5 hover:border-white/10 bg-neutral-900/30 backdrop-blur-md p-5 flex flex-col justify-between relative overflow-hidden group select-none transition-colors cursor-default shrink-0 shadow-lg"
+              >
+                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/40 to-black/80 z-10" />
+                <div className="absolute inset-0 bg-red-950/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+                
+                <div className="flex justify-between items-start z-20 font-mono text-[9px] text-neutral-500 uppercase tracking-wider">
+                  <span>MEM_RECORD_0{idx + 1}</span>
+                  <span>{item.date}</span>
+                </div>
+
+                <div className="flex-grow flex items-center justify-center z-20">
+                  <span className="text-4xl text-neutral-700 group-hover:scale-110 transition-transform duration-500 select-none">🖼️</span>
+                </div>
+
+                <div className="z-20 text-left space-y-1">
+                  <h3 className="font-mono text-sm font-bold text-neutral-200 uppercase tracking-wide group-hover:text-red-400 transition-colors duration-300">
+                    {item.title}
+                  </h3>
+                  <p className="font-mono text-[10px] text-neutral-500">
+                    {item.description}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+        </div>
+
+      </div>
+
       {/* 6. FOOTER */}
-      <footer className="w-full mt-auto pt-8 pb-4 text-center z-10 animate-fade-in opacity-0" style={{ animationDelay: "900ms" }}>
+      <footer className="w-full mt-auto pt-8 pb-4 text-center z-10 animate-fade-in opacity-0" style={{ animationDelay: "1000ms" }}>
         <div className="flex flex-col items-center gap-1 font-mono text-[10px] md:text-xs text-neutral-600">
           <p className="hover:text-neutral-500 transition-colors duration-200 cursor-default">
             "Established by unemployed engineers with internet access."

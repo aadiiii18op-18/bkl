@@ -5,20 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import ParticlesBackground from "@/components/ParticlesBackground";
 import GlassCard from "@/components/GlassCard";
-
-const ALLOWED_MEMBERS = [
-  "aadi",
-  "vishal",
-  "raju",
-  "samyak",
-  "saloni",
-  "riyanshi",
-  "sarthak",
-  "alok",
-  "riya",
-  "ayush",
-  "rohit"
-];
+import { MEMBERS_DB } from "@/lib/members";
 
 export default function Login() {
   const router = useRouter();
@@ -34,12 +21,8 @@ export default function Login() {
     const trimmedUsername = username.trim();
     const trimmedPassword = password.trim();
 
-    if (!trimmedUsername) {
-      setError("Please enter your name.");
-      return;
-    }
-    if (!trimmedPassword) {
-      setError("Please enter your password.");
+    if (!trimmedUsername || !trimmedPassword) {
+      setError("Invalid Credentials");
       return;
     }
 
@@ -51,12 +34,17 @@ export default function Login() {
     setTimeout(() => {
       setIsLoading(false);
       
-      if (ALLOWED_MEMBERS.includes(normalizedUsername)) {
+      // Look up member in db
+      const member = MEMBERS_DB.find(
+        (m) => m.username.toLowerCase() === normalizedUsername && m.password === trimmedPassword
+      );
+
+      if (member) {
         // Authenticate and redirect to dedicated profile route
-        localStorage.setItem("bkl_current_user", normalizedUsername);
-        router.push(`/member/${normalizedUsername}`);
+        localStorage.setItem("bkl_current_user", member.username.toLowerCase());
+        router.push(member.route);
       } else {
-        setError("Access denied. Member not found in database.");
+        setError("Invalid Credentials");
       }
     }, 1000); // Smooth professional transition delay
   };
@@ -97,13 +85,13 @@ export default function Login() {
             {/* Username Input */}
             <div className="space-y-2">
               <label className="block text-xs font-mono text-neutral-400 uppercase tracking-wider">
-                What's Your Name?
+                Member ID
               </label>
               <input
                 type="text"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                placeholder="Enter your name"
+                placeholder="Enter Member ID"
                 className="w-full bg-black/40 border border-neutral-800 hover:border-neutral-700 focus:border-neutral-500 rounded-lg px-4 py-3 text-sm text-neutral-200 font-mono placeholder-neutral-600 outline-none transition-all"
                 disabled={isLoading}
               />
@@ -118,7 +106,7 @@ export default function Login() {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="Enter password"
+                placeholder="Enter Password"
                 className="w-full bg-black/40 border border-neutral-800 hover:border-neutral-700 focus:border-neutral-500 rounded-lg px-4 py-3 text-sm text-neutral-200 font-mono placeholder-neutral-600 outline-none transition-all"
                 disabled={isLoading}
               />
